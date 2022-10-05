@@ -1,0 +1,5 @@
+.idea
+/client/node_modules
+/plan.xmind
+
+/server/node_modules
