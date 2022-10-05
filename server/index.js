@@ -1,6 +1,8 @@
+//The dotenv is a zero-dependency module that loads environment variables from a .env file into process.env.
+require("dotenv").config();
 const express = require("express");
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000; // PORT from .env file
 
 const app = express(); // создадим объект вызвав f-ю express. Запуск приложения
 
