@@ -4,7 +4,9 @@ const express = require("express");
 const sequelize = require("./db");
 const models = require("./models/models");
 const cors = require("cors");
+const fileUpload = require("express-fileupload");
 const router = require("./routes/index");
+const errorHandler = require("./middleware/ErrorHandlingMiddleware");
 
 const PORT = process.env.PORT || 5000; // PORT from .env file
 
@@ -13,6 +15,9 @@ const app = express(); // создадим объект вызвав f-ю expres
 app.use(cors()); // Mounts the specified middleware function or functions at the specified path: the middleware function is executed when the base of the requested path matches path.
 app.use(express.json());
 app.use("/api", router);
+app.use(fileUpload({}));
+// middleware that works with errors must be called at the end
+app.use(errorHandler);
 
 const start = async () => {
   try {
