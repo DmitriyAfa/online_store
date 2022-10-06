@@ -1,9 +1,8 @@
 const Router = require("express");
 const router = new Router();
+const userController = require("../controllers/userController");
 
-router.post("/registration");
-router.post("/login");
-router.get("/auth", (req, res) => {
-  res.json({ message: "userRouter" }); // http://localhost:5000/api/user/auth
-}); // User authentication check (JWT)
+router.post("/registration", userController.registrtion);
+router.post("/login", userController.login);
+router.get("/auth", userController.check); // User authentication check (JWT)
 module.exports = router;
