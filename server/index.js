@@ -2,7 +2,7 @@
 require("dotenv").config();
 const express = require("express");
 const sequelize = require("./db");
-
+const models = require("./models/models");
 const PORT = process.env.PORT || 5000; // PORT from .env file
 
 const app = express(); // создадим объект вызвав f-ю express. Запуск приложения
