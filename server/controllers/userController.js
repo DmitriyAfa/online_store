@@ -39,11 +39,10 @@ class UserController {
     return res.json({ token });
   }
   async check(req, res, next) {
-    const { id } = req.query;
-    if (!id) {
-      return next(ApiError.badRequiest("Не задан ID"));
-    }
-    res.json(id);
+    //makes a new token
+    const { id, email, role } = req.user;
+    const token = generateJWT(id, email, role);
+    return res.json({ token });
   }
 }
 
