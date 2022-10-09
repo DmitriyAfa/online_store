@@ -1,12 +1,4 @@
-import {
-  Navbar,
-  Nav,
-  Button,
-  Container,
-  Form,
-  Card,
-  Row,
-} from "react-bootstrap";
+import { Button, Container, Form, Card, Row } from "react-bootstrap";
 import { NavLink, useLocation } from "react-router-dom";
 import { LOGIN_ROUTE, REGISTRATION_ROUTE } from "../utils/consts";
 export const Auth = () => {
