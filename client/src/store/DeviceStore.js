@@ -18,6 +18,8 @@ export class DeviceStore {
       { id: 2, name: "a515", price: 100000, rating: 0, img: "" },
       { id: 3, name: "note pro", price: 100000, rating: 0, img: "" },
       { id: 4, name: "Atlant", price: 100000, rating: 0, img: "" },
+      { id: 5, name: "note pro", price: 100000, rating: 0, img: "" },
+      { id: 6, name: "Atlant", price: 100000, rating: 0, img: "" },
     ];
     this._selectedType = {};
     this._selectedBrand = {};
