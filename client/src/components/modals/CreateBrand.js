@@ -1,4 +1,4 @@
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Form } from "react-bootstrap";
 export const CreateBrand = ({ show, onHide }) => {
   return (
     <Modal show={show} onHide={onHide} size="lg" centered>
