@@ -6,7 +6,6 @@ import { DEVICE_ROUTE } from "../utils/consts";
 
 export const DeviceItem = observer(({ device }) => {
   const history = useHistory();
-  console.log(history);
   return (
     <Col
       md={3}
