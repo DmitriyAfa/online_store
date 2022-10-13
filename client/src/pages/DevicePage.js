@@ -10,7 +10,7 @@ export const DevicePage = () => {
 
   useEffect(() => {
     fetchOneDevice(id).then((data) => setDevice(data));
-  });
+  }, []);
   return (
     <Container className="mt-3">
       <Row>
@@ -55,16 +55,16 @@ export const DevicePage = () => {
       </Row>
       <Row className="d-flex flex-column m-3">
         <h1>Характеристики</h1>
-        {device.info.map((info, index) => {
+        {device.info.map((inf, index) => {
           return (
             <Row
-              key={info.id}
+              key={inf.id}
               style={{
                 background: index % 2 === 0 ? "lightgray" : "transparent",
                 padding: 10,
               }}
             >
-              {info.title}: {info.description}
+              {inf.title}: {inf.description}
             </Row>
           );
         })}

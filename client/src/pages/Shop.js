@@ -19,6 +19,7 @@ export const Shop = observer(() => {
     });
     fetchDevices().then(({ count, rows }) => {
       device.setDevices(rows);
+      console.log(rows);
     });
   }, []);
 
