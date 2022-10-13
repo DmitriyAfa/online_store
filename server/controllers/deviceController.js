@@ -6,7 +6,7 @@ const ApiError = require("../error/ApiError");
 class DeviceController {
   async create(req, res, next) {
     try {
-      const { name, price, brandId, typeId, info } = req.body; // get the data from the body of the request
+      let { name, price, brandId, typeId, info } = req.body; // get the data from the body of the request
       const { img } = req.files; // get the img
       let fileName = uuid.v4() + ".jpg"; // generates a unique name
       /**
@@ -39,7 +39,6 @@ class DeviceController {
           });
         });
       }
-
       return res.json(device);
     } catch (e) {
       next(ApiError.badRequiest(e.message));

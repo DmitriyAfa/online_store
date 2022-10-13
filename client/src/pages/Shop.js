@@ -5,7 +5,7 @@ import { Context } from "../index";
 import { BrandBar } from "../components/BrandBar";
 import { DeviceList } from "../components/DeviceList";
 import { TypeBar } from "../components/TypeBar";
-import { fetchTypes } from "../http/deviceApi";
+import { fetchBrands, fetchDevices, fetchTypes } from "../http/deviceApi";
 
 export const Shop = observer(() => {
   const { device } = useContext(Context);
@@ -13,6 +13,13 @@ export const Shop = observer(() => {
   useEffect(() => {
     fetchTypes().then((data) => {
       device.setTypes(data);
+    });
+    fetchBrands().then((data) => {
+      device.setBrands(data);
+    });
+    fetchDevices().then(({ count, rows }) => {
+      device.setDevices(rows);
+      console.log(rows);
     });
   }, []);
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Navbar, Nav, Button, Container } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 import { CreateBrand } from "../components/modals/CreateBrand";
 import { CreateDevice } from "../components/modals/CreateDevice";
 import { CreateType } from "../components/modals/CreateType";
