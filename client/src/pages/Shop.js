@@ -29,7 +29,7 @@ export const Shop = observer(() => {
       device.selectedType.id,
       device.selectedBrand.id,
       device.page,
-      2
+      9
     ).then(({ count, rows }) => {
       device.setDevices(rows);
       device.setTotalCount(count);
