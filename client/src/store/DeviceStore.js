@@ -6,6 +6,9 @@ export class DeviceStore {
     this._devices = [];
     this._selectedType = {};
     this._selectedBrand = {};
+    this._page = 1;
+    this._totalCount = 0;
+    this._limit = 3;
     makeAutoObservable(this);
   }
 
@@ -19,10 +22,21 @@ export class DeviceStore {
     this._devices = devices;
   }
   setSelectedType(type) {
+    this.setPage(1);
     this._selectedType = type;
   }
   setSelectedBrand(brand) {
+    this.setPage(1);
     this._selectedBrand = brand;
+  }
+  setPage(page) {
+    this._page = page;
+  }
+  setTotalCount(count) {
+    this._totalCount = count;
+  }
+  setLimit(limit) {
+    this._limit = limit;
   }
   /**
    computed functions are called only if the variable used inside has been changed
@@ -42,5 +56,14 @@ export class DeviceStore {
   }
   get selectedBrand() {
     return this._selectedBrand;
+  }
+  get page() {
+    return this._page;
+  }
+  get totalCount() {
+    return this._totalCount;
+  }
+  get limit() {
+    return this._limit;
   }
 }

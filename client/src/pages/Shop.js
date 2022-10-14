@@ -1,11 +1,12 @@
 import { observer } from "mobx-react-lite";
 import { useContext, useEffect } from "react";
-import { Button, Container, Form, Card, Row, Col } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { Context } from "../index";
 import { BrandBar } from "../components/BrandBar";
 import { DeviceList } from "../components/DeviceList";
 import { TypeBar } from "../components/TypeBar";
 import { fetchBrands, fetchDevices, fetchTypes } from "../http/deviceApi";
+import { PaginationShop } from "../components/PaginationShop";
 
 export const Shop = observer(() => {
   const { device } = useContext(Context);
@@ -17,11 +18,23 @@ export const Shop = observer(() => {
     fetchBrands().then((data) => {
       device.setBrands(data);
     });
-    fetchDevices().then(({ count, rows }) => {
+    fetchDevices(null, null, 1, 2).then(({ count, rows }) => {
       device.setDevices(rows);
-      console.log(rows);
+      device.setTotalCount(count);
     });
   }, []);
+
+  useEffect(() => {
+    fetchDevices(
+      device.selectedType.id,
+      device.selectedBrand.id,
+      device.page,
+      9
+    ).then(({ count, rows }) => {
+      device.setDevices(rows);
+      device.setTotalCount(count);
+    });
+  }, [device.page, device.selectedType, device.selectedBrand]);
 
   return (
     <div>
@@ -33,6 +46,7 @@ export const Shop = observer(() => {
           <Col md={9}>
             <BrandBar />
             <DeviceList />
+            <PaginationShop />
           </Col>
         </Row>
       </Container>
