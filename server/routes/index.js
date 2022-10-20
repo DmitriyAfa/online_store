@@ -4,12 +4,14 @@ const deviceRouter = require("./deviceRouter");
 const userRouter = require("./userRouter");
 const brandRouter = require("./brandRouter");
 const typeRouter = require("./typeRouter");
+const ratingRouter = require("./ratingRouter");
 
 // merged the routers into one but the server knows nothing about it
 // go to index.js ---> const router = require("./routes/index") ---> app.use('./api', router)
 router.use("/user", userRouter);
 router.use("/type", typeRouter);
 router.use("/brand", brandRouter);
+router.use("/rating", ratingRouter);
 router.use("/device", deviceRouter);
 
 module.exports = router;
