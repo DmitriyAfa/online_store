@@ -1,16 +1,22 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Col, Card, Image, Container, Row, Button } from "react-bootstrap";
 import bigStar from "../assets/bigStar.png";
 import { useParams } from "react-router-dom";
 import { fetchOneDevice } from "../http/deviceApi";
+import { CreateRating } from "../components/CreateRating/CreateRating";
+import { Context } from "../index";
 
 export const DevicePage = () => {
   const [device, setDevice] = useState({ info: [] });
   const { id } = useParams();
+  const { user } = useContext(Context);
+  const userId = user.user.id;
 
   useEffect(() => {
     fetchOneDevice(id).then((data) => setDevice(data));
   }, []);
+
+  const setRate = () => {};
   return (
     <Container className="mt-3">
       <Row>
@@ -48,6 +54,9 @@ export const DevicePage = () => {
               border: "5px solid lightgray",
             }}
           >
+            {user.isAuth ? (
+              <CreateRating userId={userId} deviceId={id} />
+            ) : null}
             <h3>От: {device.price} руб.</h3>
             <Button variant={"outline-dark"}>Добавить в корзину</Button>
           </Card>
