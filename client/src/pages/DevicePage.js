@@ -5,18 +5,27 @@ import { useParams } from "react-router-dom";
 import { fetchOneDevice } from "../http/deviceApi";
 import { CreateRating } from "../components/CreateRating/CreateRating";
 import { Context } from "../index";
+import { calculationRating, findRate } from "../helpers/functions";
 
 export const DevicePage = () => {
-  const [device, setDevice] = useState({ info: [] });
+  const [deviceState, setDevice] = useState({ info: [] });
+  const [count, setCount] = useState(0);
+  const [rate, setRate] = useState(0);
+  const [myRate, setMyRate] = useState(0);
   const { id } = useParams();
-  const { user } = useContext(Context);
+  const { user, device } = useContext(Context);
   const userId = user.user.id;
+  const rating = device.rating;
+  console.log(rating);
 
   useEffect(() => {
     fetchOneDevice(id).then((data) => setDevice(data));
+    if (rating) {
+      calculationRating(rating, +id, setCount, setRate);
+      // findRate(rating, )
+    }
   }, []);
 
-  const setRate = () => {};
   return (
     <Container className="mt-3">
       <Row>
@@ -24,12 +33,12 @@ export const DevicePage = () => {
           <Image
             width={300}
             height={300}
-            src={process.env.REACT_APP_API_URL + device.img}
+            src={process.env.REACT_APP_API_URL + deviceState.img}
           />
         </Col>
         <Col md={4}>
           <Row className="d-flex flex-column align-items-center">
-            <h2>{device.name}</h2>
+            <h2>{deviceState.name}</h2>
             <div
               className="d-flex align-items-center justify-content-center"
               style={{
@@ -40,7 +49,7 @@ export const DevicePage = () => {
                 fontSize: 64,
               }}
             >
-              {device.rating}
+              {`${rate} / ${count}`}
             </div>
           </Row>
         </Col>
@@ -54,17 +63,19 @@ export const DevicePage = () => {
               border: "5px solid lightgray",
             }}
           >
-            {user.isAuth ? (
+            {user.isAuth && rate > 0 ? (
+              <p>Ваша оценка {myRate} </p>
+            ) : user.isAuth && rate <= 0 ? (
               <CreateRating userId={userId} deviceId={id} />
             ) : null}
-            <h3>От: {device.price} руб.</h3>
+            <h3>От: {deviceState.price} руб.</h3>
             <Button variant={"outline-dark"}>Добавить в корзину</Button>
           </Card>
         </Col>
       </Row>
       <Row className="d-flex flex-column m-3">
         <h1>Характеристики</h1>
-        {device.info.map((inf, index) => {
+        {deviceState.info.map((inf, index) => {
           return (
             <Row
               key={inf.id}

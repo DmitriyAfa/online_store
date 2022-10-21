@@ -5,18 +5,24 @@ import { useHistory } from "react-router-dom";
 import { DEVICE_ROUTE } from "../utils/consts";
 import { useContext, useEffect, useState } from "react";
 import { Context } from "../index";
+import { calculationRating } from "../helpers/functions";
 
 export const DeviceItem = observer(({ device }) => {
   const [name, setName] = useState("");
-  const storeDevice = useContext(Context);
+  const [count, setCount] = useState(0);
+  const [rate, setRate] = useState(0);
+  const store = useContext(Context);
+  const deviceStore = store.device;
+  const { brands, rating } = deviceStore;
 
   useEffect(() => {
-    for (let i = 0; i < storeDevice.device.brands.length; i++) {
-      if (storeDevice.device.brands[i].id === device.brandId) {
-        setName(storeDevice.device.brands[i].name);
+    for (let i = 0; i < brands.length; i++) {
+      if (brands[i].id === device.brandId) {
+        setName(brands[i].name);
         break;
       }
     }
+    calculationRating(rating, device.id, setCount, setRate);
   }, []);
   const history = useHistory();
   return (
@@ -34,7 +40,9 @@ export const DeviceItem = observer(({ device }) => {
         <div className="text-black-50 d-flex justify-content-between align-items-center mt-2">
           <div>{name}</div>
           <div className="d-flex align-items-center">
-            <div>{device.rating}</div>
+            <div>
+              {rate}/{count}
+            </div>
             <Image width={18} height={18} src={star} />
           </div>
         </div>

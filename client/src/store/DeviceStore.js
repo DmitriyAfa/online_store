@@ -9,6 +9,7 @@ export class DeviceStore {
     this._page = 1;
     this._totalCount = 0;
     this._limit = 3;
+    this._rating = [];
     makeAutoObservable(this);
   }
 
@@ -38,6 +39,9 @@ export class DeviceStore {
   setLimit(limit) {
     this._limit = limit;
   }
+  setRating(rating) {
+    this._rating = rating;
+  }
   /**
    computed functions are called only if the variable used inside has been changed
    вызываются только в том случае, если переменная которая используется внутри была изменена
@@ -65,5 +69,8 @@ export class DeviceStore {
   }
   get limit() {
     return this._limit;
+  }
+  get rating() {
+    return this._rating;
   }
 }
