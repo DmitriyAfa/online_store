@@ -32,7 +32,7 @@ export const createRating = async (rating) => {
   return data;
 };
 
-export const fetchRatings = async () => {
+export const fetchRating = async () => {
   const { data } = await $host.get("api/rating");
   return data;
 };
