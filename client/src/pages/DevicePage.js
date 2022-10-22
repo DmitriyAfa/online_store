@@ -7,22 +7,31 @@ import { CreateRating } from "../components/CreateRating/CreateRating";
 import { Context } from "../index";
 import { calculationRate } from "../helpers/functions";
 import { fetchDeviceRatings, fetchUserRating } from "../http/ratingApi";
+import { observer } from "mobx-react-lite";
 
-export const DevicePage = () => {
+export const DevicePage = observer(() => {
+  const [refresh, setRefresh] = useState(false);
   const [deviceState, setDevice] = useState({ info: [] });
   const [count, setCount] = useState(0);
   const [rate, setRate] = useState(0);
   const [myRate, setMyRate] = useState(0);
   const { id } = useParams();
-  const { user, device } = useContext(Context);
+  const { user } = useContext(Context);
   const userId = user.user.id;
-  const rating = device.rating;
+
+  const refr = () => {
+    setRefresh(!refresh);
+  };
 
   useEffect(() => {
     fetchOneDevice(id).then((data) => setDevice(data));
-    fetchUserRating(userId, id).then((data) => {
-      setMyRate(data[0].rate);
-    });
+
+    fetchUserRating(userId, id)
+      .then((data) => {
+        setMyRate(data[0].rate);
+      })
+      .catch((e) => console.log(e));
+
     fetchDeviceRatings(id).then(({ count, rows }) => {
       const amount = rows.reduce((agg, item) => {
         return (agg += item.rate);
@@ -31,6 +40,22 @@ export const DevicePage = () => {
       setRate(calculationRate(amount, count));
     });
   }, []);
+
+  useEffect(() => {
+    fetchUserRating(userId, id)
+      .then((data) => {
+        setMyRate(data[0].rate);
+      })
+      .catch((e) => console.log(e));
+
+    fetchDeviceRatings(id).then(({ count, rows }) => {
+      const amount = rows.reduce((agg, item) => {
+        return (agg += item.rate);
+      }, 0);
+      setCount(count);
+      setRate(calculationRate(amount, count));
+    });
+  }, [refresh]);
 
   return (
     <Container className="mt-3">
@@ -72,7 +97,7 @@ export const DevicePage = () => {
             {user.isAuth && myRate > 0 ? (
               <p>Ваша оценка {myRate} </p>
             ) : user.isAuth && myRate <= 0 ? (
-              <CreateRating userId={userId} deviceId={id} />
+              <CreateRating onClick={refr} userId={userId} deviceId={id} />
             ) : null}
             <h3>От: {deviceState.price} руб.</h3>
             <Button variant={"outline-dark"}>Добавить в корзину</Button>
@@ -97,4 +122,4 @@ export const DevicePage = () => {
       </Row>
     </Container>
   );
-};
+});
