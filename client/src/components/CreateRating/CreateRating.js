@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createRating } from "../../http/deviceApi";
+import { createRating } from "../../http/ratingApi";
 import Star from "./Star";
 
 // Requirements:

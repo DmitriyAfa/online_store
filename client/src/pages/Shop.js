@@ -5,12 +5,8 @@ import { Context } from "../index";
 import { BrandBar } from "../components/BrandBar";
 import { DeviceList } from "../components/DeviceList";
 import { TypeBar } from "../components/TypeBar";
-import {
-  fetchBrands,
-  fetchDevices,
-  fetchRating,
-  fetchTypes,
-} from "../http/deviceApi";
+import { fetchBrands, fetchDevices, fetchTypes } from "../http/deviceApi";
+
 import { PaginationShop } from "../components/PaginationShop";
 
 export const Shop = observer(() => {
@@ -27,7 +23,6 @@ export const Shop = observer(() => {
       device.setDevices(rows);
       device.setTotalCount(count);
     });
-    fetchRating().then((rating) => device.setRating(rating));
   }, []);
 
   useEffect(() => {
