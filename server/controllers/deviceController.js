@@ -96,6 +96,19 @@ class DeviceController {
 
     return res.json(device);
   }
+  async putRate(req, res) {
+    const { id, rating } = req.body;
+
+    let data = await Device.update(
+      {
+        rating: rating,
+      },
+      {
+        where: { id },
+      }
+    );
+    return res.json(data);
+  }
 }
 
 module.exports = new DeviceController();

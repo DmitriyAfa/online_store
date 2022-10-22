@@ -1,6 +1,12 @@
 import { observer } from "mobx-react-lite";
-import { useState } from "react";
-import { createRating } from "../../http/ratingApi";
+import { useEffect, useState } from "react";
+import { calculationRate } from "../../helpers/functions";
+import { changeDeviceRating } from "../../http/deviceApi";
+import {
+  changeDeviceRatingByUser,
+  createRating,
+  fetchDeviceRatings,
+} from "../../http/ratingApi";
 import Star from "./Star";
 
 // Requirements:
@@ -21,15 +27,69 @@ export const CreateRating = observer(
       return i < threshold ? "red" : "grey";
     }
 
+    useEffect(() => {
+      setNumSelectedStars(initialRating);
+    }, [initialRating]);
+
     const addRating = (i) => {
       setNumSelectedStars(i);
-      createRating({
-        rate: i,
-        userId: userId,
-        deviceId: deviceId,
-      }).then(() => {
-        onClick();
-      });
+
+      /**
+       * if numSelectedStars <= it means that the user has not selected a rating
+       *  and it is necessary to create a rating for this device
+       */
+      if (numSelectedStars <= 0) {
+        createRating({
+          rate: i,
+          userId: userId,
+          deviceId: deviceId,
+        })
+          .then(() => {
+            fetchDeviceRatings(deviceId)
+              .then(({ count, rows }) => {
+                const amount = rows.reduce((agg, item) => {
+                  return (agg += item.rate);
+                }, 0);
+                let calculatedRating = calculationRate(amount, count);
+                console.log(calculatedRating);
+                changeDeviceRating({
+                  id: deviceId,
+                  rating: `${calculatedRating}`,
+                }).then(() => {
+                  onClick();
+                });
+              })
+              .catch((e) => console.log(e));
+          })
+          .catch((e) => console.log(e));
+      } else {
+        /**
+         * else we need to change the rating for this device
+         */
+        changeDeviceRatingByUser({
+          rate: i,
+          userId: userId,
+          deviceId: deviceId,
+        })
+          .then(() => {
+            fetchDeviceRatings(deviceId)
+              .then(({ count, rows }) => {
+                const amount = rows.reduce((agg, item) => {
+                  return (agg += item.rate);
+                }, 0);
+                let calculatedRating = calculationRate(amount, count);
+                console.log("changeDeviceRatingByUser ", calculatedRating);
+                changeDeviceRating({
+                  id: deviceId,
+                  rating: `${calculatedRating}`,
+                }).then(() => {
+                  onClick();
+                });
+              })
+              .catch((e) => console.log(e));
+          })
+          .catch((e) => console.log(e));
+      }
     };
 
     return (

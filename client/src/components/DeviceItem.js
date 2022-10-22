@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 import { DEVICE_ROUTE } from "../utils/consts";
 import { useContext, useEffect, useState } from "react";
 import { Context } from "../index";
-import { calculationRate } from "../helpers/functions";
 import { fetchDeviceRatings } from "../http/ratingApi";
 
 export const DeviceItem = observer(({ device }) => {
@@ -15,7 +14,6 @@ export const DeviceItem = observer(({ device }) => {
   const store = useContext(Context);
   const deviceStore = store.device;
   const { brands } = deviceStore;
-
   useEffect(() => {
     for (let i = 0; i < brands.length; i++) {
       if (brands[i].id === device.brandId) {
@@ -24,13 +22,11 @@ export const DeviceItem = observer(({ device }) => {
       }
     }
     fetchDeviceRatings(device.id).then(({ count, rows }) => {
-      const amount = rows.reduce((agg, item) => {
-        return (agg += item.rate);
-      }, 0);
       setCount(count);
-      setRate(calculationRate(amount, count));
     });
+    setRate(device.rating);
   }, []);
+
   const history = useHistory();
   return (
     <Col

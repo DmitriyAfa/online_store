@@ -21,6 +21,19 @@ class RatingController {
     }
     return res.json(ratings);
   }
+  async putRate(req, res) {
+    const { userId, deviceId, rate } = req.body;
+
+    let data = await Rating.update(
+      {
+        rate: rate,
+      },
+      {
+        where: { userId, deviceId },
+      }
+    );
+    return res.json(data);
+  }
 }
 
 module.exports = new RatingController();

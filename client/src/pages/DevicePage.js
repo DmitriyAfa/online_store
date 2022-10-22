@@ -5,58 +5,51 @@ import { useParams } from "react-router-dom";
 import { fetchOneDevice } from "../http/deviceApi";
 import { CreateRating } from "../components/CreateRating/CreateRating";
 import { Context } from "../index";
-import { calculationRate } from "../helpers/functions";
 import { fetchDeviceRatings, fetchUserRating } from "../http/ratingApi";
 import { observer } from "mobx-react-lite";
 
 export const DevicePage = observer(() => {
   const [refresh, setRefresh] = useState(false);
-  const [deviceState, setDevice] = useState({ info: [] });
+  const [deviceState, setDeviceState] = useState({ info: [] });
   const [count, setCount] = useState(0);
-  const [rate, setRate] = useState(0);
+
   const [myRate, setMyRate] = useState(0);
   const { id } = useParams();
-  const { user } = useContext(Context);
+  const { user, device } = useContext(Context);
   const userId = user.user.id;
-
   const refr = () => {
     setRefresh(!refresh);
   };
+  console.log(deviceState);
 
   useEffect(() => {
-    fetchOneDevice(id).then((data) => setDevice(data));
+    fetchOneDevice(id).then((data) => setDeviceState(data));
 
     fetchUserRating(userId, id)
       .then((data) => {
-        setMyRate(data[0].rate);
+        setMyRate(+data[0].rate);
       })
       .catch((e) => console.log(e));
 
     fetchDeviceRatings(id).then(({ count, rows }) => {
-      const amount = rows.reduce((agg, item) => {
-        return (agg += item.rate);
-      }, 0);
       setCount(count);
-      setRate(calculationRate(amount, count));
     });
   }, []);
 
   useEffect(() => {
+    fetchOneDevice(id).then((data) => setDeviceState(data));
     fetchUserRating(userId, id)
       .then((data) => {
-        setMyRate(data[0].rate);
+        setMyRate(+data[0].rate);
       })
       .catch((e) => console.log(e));
 
     fetchDeviceRatings(id).then(({ count, rows }) => {
-      const amount = rows.reduce((agg, item) => {
-        return (agg += item.rate);
-      }, 0);
       setCount(count);
-      setRate(calculationRate(amount, count));
     });
+    console.log(1);
   }, [refresh]);
-
+  console.log(device);
   return (
     <Container className="mt-3">
       <Row>
@@ -80,7 +73,7 @@ export const DevicePage = observer(() => {
                 fontSize: 64,
               }}
             >
-              {`${rate} / ${count}`}
+              {`${deviceState.rating} / ${count}`}
             </div>
           </Row>
         </Col>
@@ -94,10 +87,13 @@ export const DevicePage = observer(() => {
               border: "5px solid lightgray",
             }}
           >
-            {user.isAuth && myRate > 0 ? (
-              <p>Ваша оценка {myRate} </p>
-            ) : user.isAuth && myRate <= 0 ? (
-              <CreateRating onClick={refr} userId={userId} deviceId={id} />
+            {user.isAuth ? (
+              <CreateRating
+                initialRating={myRate}
+                onClick={refr}
+                userId={userId}
+                deviceId={id}
+              />
             ) : null}
             <h3>От: {deviceState.price} руб.</h3>
             <Button variant={"outline-dark"}>Добавить в корзину</Button>
