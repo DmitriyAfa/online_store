@@ -22,3 +22,12 @@ export const fetchUserRating = async (userId, deviceId) => {
   });
   return data;
 };
+
+export const changeDeviceRatingByUser = async ({ rate, userId, deviceId }) => {
+  const { data } = await $host.put("api/rating", {
+    rate,
+    userId,
+    deviceId,
+  });
+  return data;
+};

@@ -6,5 +6,6 @@ const checkRole = require("../middleware/checkRoleMiddleware");
 router.post("/", checkRole("ADMIN"), deviceController.create);
 router.get("/", deviceController.getAll);
 router.get("/:id", deviceController.getOne); // Get the current device
+router.put("/", deviceController.putRate);
 
 module.exports = router;
