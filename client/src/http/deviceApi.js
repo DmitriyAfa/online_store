@@ -27,16 +27,6 @@ export const fetchBrands = async () => {
   return data;
 };
 
-export const createRating = async (rating) => {
-  const { data } = await $authHost.post("api/rating", rating);
-  return data;
-};
-
-export const fetchRating = async () => {
-  const { data } = await $host.get("api/rating");
-  return data;
-};
-
 export const createDevice = async (device) => {
   const { data } = await $authHost.post("api/device", device);
   return data;

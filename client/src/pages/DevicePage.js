@@ -5,7 +5,8 @@ import { useParams } from "react-router-dom";
 import { fetchOneDevice } from "../http/deviceApi";
 import { CreateRating } from "../components/CreateRating/CreateRating";
 import { Context } from "../index";
-import { calculationRating, findRate } from "../helpers/functions";
+import { calculationRate } from "../helpers/functions";
+import { fetchDeviceRatings, fetchUserRating } from "../http/ratingApi";
 
 export const DevicePage = () => {
   const [deviceState, setDevice] = useState({ info: [] });
@@ -16,14 +17,19 @@ export const DevicePage = () => {
   const { user, device } = useContext(Context);
   const userId = user.user.id;
   const rating = device.rating;
-  console.log(rating);
 
   useEffect(() => {
     fetchOneDevice(id).then((data) => setDevice(data));
-    if (rating) {
-      calculationRating(rating, +id, setCount, setRate);
-      // findRate(rating, )
-    }
+    fetchUserRating(userId, id).then((data) => {
+      setMyRate(data[0].rate);
+    });
+    fetchDeviceRatings(id).then(({ count, rows }) => {
+      const amount = rows.reduce((agg, item) => {
+        return (agg += item.rate);
+      }, 0);
+      setCount(count);
+      setRate(calculationRate(amount, count));
+    });
   }, []);
 
   return (
@@ -63,9 +69,9 @@ export const DevicePage = () => {
               border: "5px solid lightgray",
             }}
           >
-            {user.isAuth && rate > 0 ? (
+            {user.isAuth && myRate > 0 ? (
               <p>Ваша оценка {myRate} </p>
-            ) : user.isAuth && rate <= 0 ? (
+            ) : user.isAuth && myRate <= 0 ? (
               <CreateRating userId={userId} deviceId={id} />
             ) : null}
             <h3>От: {deviceState.price} руб.</h3>
